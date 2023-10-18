@@ -16,6 +16,7 @@ const port = process.env.PORT || 5000
 
 const uri = `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.cn0nmqv.mongodb.net/?retryWrites=true&w=majority`;
 
+
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
@@ -25,10 +26,38 @@ const client = new MongoClient(uri, {
     }
 });
 
-async function  run() {
+async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
+        const ProductCollection = client.db("AutoHubBrandDB").collection("products");
+        const BrandCollection = client.db("AutoHubBrandDB").collection("Brand");
+
+        // insert data
+        app.post('/products', async (req, res) => {
+                const products = req.body;
+                const result = await ProductCollection.insertOne(products);
+                res.send(result)
+            }),
+
+            // add brand 6 data form home page show all brand
+            app.post('/brands', async (req, res) => {
+                const Brand = req.body;
+                const result = await BrandCollection.insertOne(Brand);
+                res.send(result)
+            }),
+            // read data from brand collections
+            app.get('/brands', async (req, res) => {
+                const result = await BrandCollection.find().toArray();
+                res.send(result)
+            })
+
+        // read data find data 
+
+        app.get('/products', async (req, res) => {
+            const result = await ProductCollection.find().toArray();
+            res.send(result)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({
