@@ -42,23 +42,23 @@ async function run() {
                 res.send(result)
             }),
             // add data for my card information
-            app.post('/products/mycard', async(req,res) =>{
+            app.post('/products/mycard', async (req, res) => {
                 const MyProduct = req.body;
                 const result = await MyCardCollection.insertOne(MyProduct)
                 res.send(result)
             });
-            app.get('/products/mycard', async (req,res) =>{
-                const resuls = await MyCardCollection.find().toArray();
-                res.send(resuls)
-            })
+        app.get('/products/mycard', async (req, res) => {
+            const resuls = await MyCardCollection.find().toArray();
+            res.send(resuls)
+        })
 
-            // add brand 6 data form home page show all brand
-            app.post('/brands', async (req, res) => {
+        // add brand 6 data form home page show all brand
+        app.post('/brands', async (req, res) => {
                 const Brand = req.body;
                 const result = await BrandCollection.insertOne(Brand);
                 res.send(result)
             }),
-            
+
             // read data from brand collections
             app.get('/brands', async (req, res) => {
                 const result = await BrandCollection.find().toArray();
@@ -82,8 +82,14 @@ async function run() {
         })
 
         // details for product
-        
-        
+
+        app.delete('/products/mycard/:id',async (req,res) =>{
+            const id = req.params.id;
+            const query = {_id : new ObjectId(id)};
+            const result = await MyCardCollection.deleteOne(query);
+            res.send(result)
+
+        })
 
         // update data 
 
