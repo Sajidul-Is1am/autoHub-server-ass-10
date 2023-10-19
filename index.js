@@ -33,6 +33,7 @@ async function run() {
         await client.connect();
         const ProductCollection = client.db("AutoHubBrandDB").collection("products");
         const BrandCollection = client.db("AutoHubBrandDB").collection("Brand");
+        const MyCardCollection = client.db("AutoHubBrandDB").collection("MyCard");
 
         // insert data
         app.post('/products', async (req, res) => {
@@ -40,6 +41,16 @@ async function run() {
                 const result = await ProductCollection.insertOne(products);
                 res.send(result)
             }),
+            // add data for my card information
+            app.post('/products/mycard', async(req,res) =>{
+                const MyProduct = req.body;
+                const result = await MyCardCollection.insertOne(MyProduct)
+                res.send(result)
+            });
+            app.get('/products/mycard', async (req,res) =>{
+                const resuls = await MyCardCollection.find().toArray();
+                res.send(resuls)
+            })
 
             // add brand 6 data form home page show all brand
             app.post('/brands', async (req, res) => {
@@ -47,6 +58,7 @@ async function run() {
                 const result = await BrandCollection.insertOne(Brand);
                 res.send(result)
             }),
+            
             // read data from brand collections
             app.get('/brands', async (req, res) => {
                 const result = await BrandCollection.find().toArray();
@@ -69,15 +81,9 @@ async function run() {
             res.send(results)
         })
 
-        // get data form barand advertisment 
-        app.get('/products/details/:name', async (req, res) => {
-            const name = req.params.name;
-            const query = {
-                name: name
-            };
-            const results = await ProductCollection.findOne(query).toArray();
-            res.send(results)
-        })
+        // details for product
+        
+        
 
         // update data 
 
