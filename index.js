@@ -3,7 +3,8 @@ const cors = require('cors');
 require('dotenv').config()
 const {
     MongoClient,
-    ServerApiVersion
+    ServerApiVersion,
+    ObjectId
 } = require('mongodb');
 const app = express()
 const port = process.env.PORT || 5000
@@ -51,13 +52,37 @@ async function run() {
                 const result = await BrandCollection.find().toArray();
                 res.send(result)
             })
-
         // read data find data 
 
         app.get('/products', async (req, res) => {
             const result = await ProductCollection.find().toArray();
             res.send(result)
         })
+
+        // get data form barand advertisment 
+        app.get('/products/:brandName', async (req, res) => {
+            const brandName = req.params.brandName;
+            const query = {
+                brandname: brandName
+            };
+            const results = await ProductCollection.find(query).toArray();
+            res.send(results)
+        })
+
+        // get data form barand advertisment 
+        app.get('/products/details/:name', async (req, res) => {
+            const name = req.params.name;
+            const query = {
+                name: name
+            };
+            const results = await ProductCollection.findOne(query).toArray();
+            res.send(results)
+        })
+
+
+
+
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({
